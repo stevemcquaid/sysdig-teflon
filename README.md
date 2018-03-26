@@ -35,5 +35,14 @@
   - [ ] Get falco chart into kubernetes charts repo
   - [ ] Build falco -> alert manager integration
     - [ ] Build falco prometheus metrics endpoint
+      - [ ] https://github.com/draios/falco/wiki/Falco-Alerts
+        - [ ] syslog
+            - [ ] metrics endpoint as a syslog parser?
+        - [ ] file
+            - [ ] shared file/volume, monitor and parse
+        - [ ] stdout
+            - [ ] logging aggregator parser/alerter
+        - [ ] spawned program
+            - [ ] REST API for metrics server
     - [ ] Build falco prometheus collector/alertmanager alerts
-  -
+    
