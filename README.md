@@ -22,3 +22,8 @@
   - Where is falco going?
   - where could it go?
   - [ ] turn this all into a checklist
+  - [ ] Falco -f rules.yaml -f rules2.yaml -> kubectl create -f falco-rules-crd.yaml
+  - [ ] Falco helm chart
+  - [ ] Falco operator might be better for this than a crd, no CRD is better
+  - [ ] Pros/Cons of CRD vs operator
+  - [ ] Figure out how to reload falco or have falco sigup/load new rulesets
