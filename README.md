@@ -31,6 +31,9 @@
   - [ ] Create helm chart (determine if rbac or not) for deploying falco
   - [ ] look into ksonnet for helm chart generation
   - [ ] config maps for multiple falco rules files
-  - [ ] 
-  -
+  - [ ] https://sysdig.com/blog/runtime-security-kubernetes-sysdig-falco/
+  - [ ] Get falco chart into kubernetes charts repo
+  - [ ] Build falco -> alert manager integration
+    - [ ] Build falco prometheus metrics endpoint
+    - [ ] Build falco prometheus collector/alertmanager alerts
   -
