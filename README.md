@@ -36,16 +36,18 @@
   - [ ] Build falco -> alert manager integration
     - [ ] Build falco prometheus metrics endpoint
       - [ ] https://github.com/draios/falco/wiki/Falco-Alerts
-        - [ ] syslog
-            - [ ] metrics endpoint as a syslog parser?
+        - [x] syslog
+            - [x] metrics endpoint as a syslog parser?
                 - https://github.com/fstab/grok_exporter
                 - Need to deal with separate logic in the grok'er, parsing syslog, and format changes
-        - [ ] file
+                - If you have buffered output, then this wont be very reliable
+        - [x] file
             - [ ] shared file/volume, monitor and parse
                 - Need to deal with file buffers, rotation, and locks
-        - [ ] stdout
-            - [ ] logging aggregator parser/alerter
+        - [x] stdout
+            - [x] logging aggregator parser/alerter
                 - Need to deal with separate logic in the log parser, and format changes
+                - Buffered output makes this unreliable
         - [ ] spawned program
             - [ ] REST API for metrics server
             - Need to worry about network stability, stable api, and connecting to api
@@ -74,4 +76,8 @@ Dockerize it and document how to deploy/use with Kubernetes
 Upload to GitHub and make it contribution friendly (README.md, PRs policy, etc)
 
 Hint: https://sysdig.com/blog/kubernetes-scaler/
-
+# Idea
+  - Kubernetes HPA using a custom-defined metric coming from sysdig monitor. Implement a custom metrics server and configurable autoscaler.
+  - The Custom-defined metric is a function of falco event alerts, ingested via a custom falco.yaml program_output sending to a custom service to parse and expose as a prometheus endpoint
+  -
+  -
