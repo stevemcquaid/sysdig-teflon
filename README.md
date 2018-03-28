@@ -1,14 +1,24 @@
-# SysDig Challenge Ideas
-  - CRD to define monitors/alerts
-  - CRD to define security rule / falco
-  - Deploy mechanisms for sysdig / falco
-    - helm chart
-    - operator
-  - CRD to create dashboards/falco rules
-  - API to receive falco alerts
-    - Delete infected pods
-  - Instrumentation/Metrics from falco alerts
-  - HPA based upon falco alerts
+# SysDig Challenge Abstract
+  - Destroy & Recreate infected pods
+  - Instrument rate of reaping
+  - Scale services that are under attack
+
+### Components Required
+  - [ ] TEFLON
+    - [ ] API to receive, parse, process falco alerts
+    - [ ] Delete infected pods
+      - [ ] Check for available available replicas avoid downtime
+    - [ ] Metrics endpoint to monitor rate of infection/reaping
+  - [ ] HPA to scale if under active attack
+    - Possible Trigger Metrics (Goal = Have more replicas than hacker can infect):
+      - [ ] Number of infections
+      - [ ] Number of reapings
+      - [ ] % available endpoints vs reaped ones
+      - [ ] Time to new infection
+      -[ ] Time to recreation
+  - [ ] Custom-metrics-apiserver
+    - Unsure if this can be same as metrics endpoint
+    - Consumed by HPA to determine whether or not to scale
 
 # TODO
   - [X] Research Sysdig
@@ -34,10 +44,9 @@
     - Sysdig Monitor Ingestion
   - [X] Figure out how to create HPA to scale if under attack
     - https://sysdig.com/blog/kubernetes-scaler/
-  - [ ] Start building the different parts of the system
-    - 
+  - [X] Start building the different parts of the system
 
-# Tasks
+# Tasks to create HPA
   - [ ] Ensure Cluster Compatibility
     - [ ] Check if `--horizontal-pod-autoscaler-use-rest-clients` is set on kube-controller-manager
   - [ ] Get target deployment to scale
@@ -76,19 +85,15 @@
     - `kubectl create -f kubernetes-scaler-metrics-api/scaler/horizontalpodautoscaler.yaml`
     - `kubectl describe hpa`
 
-
-
-# Archive
-  - [ ] Create HPA ingesting the metrics from Teflon
-  - [ ] Self healing security via falco
-    - [ ] reaper
+# Description of system architecture
+  - Create HPA ingesting the metrics from Teflon
+  - Self healing security via falco
+    - reaper
       - reap on infection, hpa to expand if under attack
-      - [X] falco -> webhook to reaper api to selectively destroy infected pods
+      - falco -> webhook to reaper api to selectively destroy infected pods
         - simple, known architecture
         - must have parsing logic and alerting definitions
         - implement metrics endpoint via prom / sysdig monitor to show number of falco detections & pod reapings
-
-
 
 # Option A
 You should implement a Kubernetes HPA using metrics coming from Sysdig Monitor. Use Sysdig API to get this metrics and implement a custom metrics server and a configurable autoscaler. Try to bring this as far as your time allows:
@@ -103,5 +108,3 @@ Hint: https://sysdig.com/blog/kubernetes-scaler/
 # Idea
   - Kubernetes HPA using a custom-defined metric coming from sysdig monitor. Implement a custom metrics server and configurable autoscaler.
   - The Custom-defined metric is a function of falco event alerts, ingested via a custom falco.yaml program_output sending to a custom service to parse and expose as a prometheus endpoint
-  -
-  -
