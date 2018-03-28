@@ -1,70 +1,94 @@
-# SysDig CRD ideas
+# SysDig Challenge Ideas
   - CRD to define monitors/alerts
   - CRD to define security rule / falco
-  - deploy sysdig
+  - Deploy mechanisms for sysdig / falco
     - helm chart
     - operator
-    - deploy falco
-  - CRD to create dashboard
+  - CRD to create dashboards/falco rules
+  - API to receive falco alerts
+    - Delete infected pods
+  - Instrumentation/Metrics from falco alerts
+  - HPA based upon falco alerts
 
 # TODO
-  - [ ] Research sysdig
-  - [ ] Research Falco
-  - [ ] Read blog posts
-    - [ ] Istio stuff?
-    - [ ] Prometheus
-    - [ ] Custom monitor annotations/definitions
-      - [ ] Operator/monitor
-  - [ ] Document Sysdig value props & competitive advantages/SWOT?
-  - [ ] Compare with grafana & datadog
-  - [ ] priv sidecar on deployment with annotation instead of daemon set
-  - [ ] what are falco's value prop and competitive advantages?
-  - [ ] Where is falco going?
-  - [ ] where could it go?
-  - [ ] turn this all into a checklist
-  - [ ] Falco -f rules.yaml -f rules2.yaml -> kubectl create -f falco-rules-crd.yaml
-  - [ ] Falco helm chart
-  - [ ] Falco operator might be better for this than a crd, no CRD is better
-  - [ ] Pros/Cons of CRD vs operator
-  - [ ] Figure out how to reload falco or have falco sigup/load new rulesets
-  - [ ] https://github.com/draios/falco/blob/dev/examples/k8s-using-daemonset/k8s-without-rbac/falco-daemonset.yaml
-  - [ ] Create helm chart (determine if rbac or not) for deploying falco
-  - [ ] look into ksonnet for helm chart generation
-  - [ ] config maps for multiple falco rules files
-  - [ ] https://sysdig.com/blog/runtime-security-kubernetes-sysdig-falco/
-  - [ ] Get falco chart into kubernetes charts repo
-  - [ ] Build falco -> alert manager integration
-    - [ ] Build falco prometheus metrics endpoint
-      - [ ] https://github.com/draios/falco/wiki/Falco-Alerts
-        - [x] syslog
-            - [x] metrics endpoint as a syslog parser?
-                - https://github.com/fstab/grok_exporter
-                - Need to deal with separate logic in the grok'er, parsing syslog, and format changes
-                - If you have buffered output, then this wont be very reliable
-        - [x] file
-            - [ ] shared file/volume, monitor and parse
-                - Need to deal with file buffers, rotation, and locks
-        - [x] stdout
-            - [x] logging aggregator parser/alerter
-                - Need to deal with separate logic in the log parser, and format changes
-                - Buffered output makes this unreliable
-        - [ ] spawned program
-            - [ ] REST API for metrics server
-            - Need to worry about network stability, stable api, and connecting to api
-    - [ ] Build falco prometheus collector/alertmanager alerts
+  - [X] Research Sysdig
+  - [X] Research Falco
+  - [X] Read blog posts
+    - [X] Istio stuff
+    - [X] Prometheus
+    - [X] Falco + K8S
+    - [X] Custom prometheus monitor annotations/definitions
+  - [X] Figure out how to reload falco or have falco sigup/load new rulesets
+  - [ ] Get falco helm chart into kubernetes charts repo
+  - [X] Figure out how to expose Falco Alerts to an API - "TEFLON Project"
+    - [X] https://github.com/draios/falco/wiki/Falco-Alerts
+    - [X] Methods
+      - [ ] Standard Output
+      - [ ] File
+      - [ ] Syslog
+      - [X] Spawned program
+        - Most reliable, easy to use, and scalable
+    - [X] How to parse Falco json in golang
+  - [X] Figure out how to expose metrics of these Falco alerts
+    - Prometheus Metrics Endpoint - https://blog.alexellis.io/prometheus-monitoring/
+    - Sysdig Monitor Ingestion
+  - [X] Figure out how to create HPA to scale if under attack
+    - https://sysdig.com/blog/kubernetes-scaler/
+  - [ ] Start building the different parts of the system
+    - 
+
+# Tasks
+  - [ ] Ensure Cluster Compatibility
+    - [ ] Check if `--horizontal-pod-autoscaler-use-rest-clients` is set on kube-controller-manager
+  - [ ] Get target deployment to scale
+    - https://github.com/mateobur/kubernetes-scaler-metrics-api
+    - This will eventually be the same as the input to the Teflon service
+  - [ ] Create a custom-metrics-apiserver - produce a: `MetricValueList`, with `apiVersion`: `custom.metrics.k8s.io/v1beta1`
+    - https://github.com/kubernetes-incubator/custom-metrics-apiserver
+    - https://github.com/mateobur/kubernetes-scaler-metrics-api
+    - `kubectl create -f kubernetes-scaler-metrics-api/scaler/custom-metrics-ns-rbac.yaml`
+    - Add in the sysdig API KEY
+    - `kubectl create -f kubernetes-scaler-metrics-api/scaler/custom-metric-api-sysdig.yaml -n custom-metrics`
+    - Preview the metrics available:
+      - `kubectl create clusterrolebinding cli-api-read-access --clusterrole custom-metrics-getter --user system:anonymous`
+      - `curl -sSk https://10.96.0.1/apis/custom.metrics.k8s.io/v1beta1/namespaces/default/services/flask/net.http.request.count`
+  - [ ] Create Horizontal Pod Autoscaler
+      ```bash
+    kind: HorizontalPodAutoscaler
+    apiVersion: autoscaling/v2beta1
+    metadata:
+      name: flask-hpa
+    spec:
+      scaleTargetRef:
+        kind: Deployment
+        name: flask
+      minReplicas: 2
+      maxReplicas: 10
+      metrics:
+      - type: Object
+        object:
+          target:
+            kind: Service
+            name: flask
+          metricName: net.http.request.count
+          targetValue: 100
+    ```
+    - `kubectl create -f kubernetes-scaler-metrics-api/scaler/horizontalpodautoscaler.yaml`
+    - `kubectl describe hpa`
+
+
+
+# Archive
+  - [ ] Create HPA ingesting the metrics from Teflon
   - [ ] Self healing security via falco
     - [ ] reaper
-      - reap on infection, hpa to expand cluster?
-      - [ ] falco -> prometheus -> alert manager -> reaper webhook
-      - [ ] falco -> reaper sidecar to destroy infected pods
-      - [x] falco -> webhook to reaper api to delectively destroy infected pods
+      - reap on infection, hpa to expand if under attack
+      - [X] falco -> webhook to reaper api to selectively destroy infected pods
         - simple, known architecture
         - must have parsing logic and alerting definitions
         - implement metrics endpoint via prom / sysdig monitor to show number of falco detections & pod reapings
-        - 
-    - [ ] HPA that via custom metrics api
-    -
-    -
+
+
 
 # Option A
 You should implement a Kubernetes HPA using metrics coming from Sysdig Monitor. Use Sysdig API to get this metrics and implement a custom metrics server and a configurable autoscaler. Try to bring this as far as your time allows:
