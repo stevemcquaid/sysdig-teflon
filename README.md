@@ -5,7 +5,7 @@
 
 ### Components Required
   - [ ] TEFLON
-    - [ ] API to receive, parse, process falco alerts
+    - [X] API to receive, parse, process falco alerts
     - [ ] Delete infected pods
       - [ ] Check for available available replicas avoid downtime
     - [ ] Metrics endpoint to monitor rate of infection/reaping
