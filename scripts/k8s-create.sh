@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -ex
+set -x
 
 kubectl create -f k8s/deployment.yaml
 kubectl create -f k8s/svc.yaml

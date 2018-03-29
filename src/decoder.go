@@ -42,18 +42,24 @@ func handleFalco(w http.ResponseWriter, r *http.Request) {
     //if err != nil {
         //panic(err)
     //}
-
-    // Read body
-	fmt.Println(r.Body)
+	
 	b, err := ioutil.ReadAll(r.Body)
-	defer r.Body.Close()
 	if err != nil {
-		http.Error(w, err.Error(), 500)
+		fmt.Printf("Error reading body: %v", err)
+		//http.Error(w, "can't read body", http.StatusBadRequest)
 		return
 	}
+	// Read body
+	//fmt.Println(string(body))
+	//b, err := ioutil.ReadAll(r.Body)
+	//defer r.Body.Close()
+	//if err != nil {
+		//http.Error(w, err.Error(), 500)
+		//return
+	//}
 
-	fmt.Println(b)
-	
+	fmt.Println(string(b))
+
 	// Unmarshal
 	var fr Falco_Response
 	err = json.Unmarshal(b, &fr)
@@ -73,7 +79,8 @@ func handleFalco(w http.ResponseWriter, r *http.Request) {
 
 	//json.Unmarshal(bodyBytes, &fr)
 	//defer req.Body.Close()
-    fmt.Println(fr)
+    fmt.Println(fr.Fields.K8s_pod_name)
+	//fmt.Println("hope this works 2 ")
 }
 
 func main() {

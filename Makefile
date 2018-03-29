@@ -15,7 +15,8 @@ run:
 shell:
 	@bash -x scripts/shell.sh
 
-k8s:
+## Deploy k8s
+kube:
 	@bash -x scripts/k8s-delete.sh
 	@bash -x scripts/k8s-create.sh
 
