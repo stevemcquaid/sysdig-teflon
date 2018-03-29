@@ -15,6 +15,9 @@ run:
 shell:
 	@bash -x scripts/shell.sh
 
+k8s:
+	@bash -x scripts/k8s-delete.sh
+	@bash -x scripts/k8s-create.sh
 
 help:
 	@printf "Available make targets:\n\n"
