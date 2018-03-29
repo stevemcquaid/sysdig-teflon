@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: teflon
+  labels:
+    app: teflon
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: teflon
+  template:
+    metadata:
+      labels:
+        app: teflon
+    spec:
+      containers:
+      - name: teflon
+        image: stevemcquaid/falco-teflon:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80

@@ -44,6 +44,7 @@ func handleFalco(w http.ResponseWriter, r *http.Request) {
     //}
 
     // Read body
+	fmt.Println(r.Body)
 	b, err := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
 	if err != nil {
@@ -51,6 +52,8 @@ func handleFalco(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	fmt.Println(b)
+	
 	// Unmarshal
 	var fr Falco_Response
 	err = json.Unmarshal(b, &fr)
