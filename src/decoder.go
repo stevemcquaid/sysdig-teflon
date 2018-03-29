@@ -35,37 +35,30 @@ func marshalFalco(falcoJson []byte) {
 }
 
 func handleFalco(w http.ResponseWriter, r *http.Request) {
-	//decoder := json.NewDecoder(req.Body)
-	//var fr Falco_Response
-	//err := decoder.Decode(&fr)
-	//if err != nil {
-	//panic(err)
-	//}
-
+	// Read body of request
 	b, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		fmt.Printf("Error reading body: %v", err)
-		//http.Error(w, "can't read body", http.StatusBadRequest)
+		http.Error(w, "can't read body", http.StatusBadRequest)
 		return
 	}
-	// Read body
-	//fmt.Println(string(body))
-	//b, err := ioutil.ReadAll(r.Body)
-	//defer r.Body.Close()
-	//if err != nil {
-	//http.Error(w, err.Error(), 500)
-	//return
-	//}
 
-	fmt.Println(string(b))
+	// Print raw byte array of request
+	//fmt.Println(string(b))
 
-	// Unmarshal
+	// Unmarshal into expected falco struct
 	var fr Falco_Response
 	err = json.Unmarshal(b, &fr)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
 	}
+
+	// Alternate Unmarshal Method
+	//decoder := json.NewDecoder(req.Body)
+	//err := decoder.Decode(&fr)
+
+	// Respond to request with Success
 	s := "Success! "
 	output, err := json.Marshal(s)
 	if err != nil {
@@ -75,10 +68,38 @@ func handleFalco(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("content-type", "application/json")
 	w.Write(output)
 
-	//json.Unmarshal(bodyBytes, &fr)
-	//defer req.Body.Close()
-	fmt.Println(fr.Fields.K8s_pod_name)
-	//fmt.Println("hope this works 2 ")
+	// Now determine if we should delete the pod
+	filter := getFilter()
+	namespace := getNamespace()
+	if shouldDeletePod(fr.Fields.K8s_pod_name, filter) {
+		deletePod(fr.Fields.K8s_pod_name, namespace)
+	}
+}
+
+func getFilter() string {
+	return "filter"
+}
+
+func getNamespace() string {
+	// Lookup namespace from the current teflon deployment
+	// or from the falco deployment via the k8s api
+	return "default"
+}
+
+func shouldDeletePod(podname string, filter string) bool {
+	if podname.contains(filter) {
+		return true
+	}
+
+	if podname.contains("delete") {
+		return true
+	}
+
+	return false
+}
+func deletePod(podname string, namespace string) {
+	fmt.Println("Deleting podname: ", podname, "namespace: ", namespace, "...")
+	// Do k8s things here
 }
 
 func main() {
