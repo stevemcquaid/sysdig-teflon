@@ -68,6 +68,9 @@ func handleFalco(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("content-type", "application/json")
 	w.Write(output)
 
+	// Process metrics for this event
+	processFalcoEventMetrics(&fr)
+
 	// Now determine if we should delete the pod
 	filter := getFilter()
 	namespace := getNamespace()
@@ -87,19 +90,37 @@ func getNamespace() string {
 }
 
 func shouldDeletePod(podname string, filter string) bool {
-	if podname.contains(filter) {
+	if contains(podname, filter) {
 		return true
 	}
 
-	if podname.contains("delete") {
+	if contains(podname, "delete") {
 		return true
 	}
 
 	return false
 }
+
+func contains(superStr string, subStr string) bool {
+	return true
+}
+
 func deletePod(podname string, namespace string) {
 	fmt.Println("Deleting podname: ", podname, "namespace: ", namespace, "...")
 	// Do k8s things here
+}
+
+func processFalcoEventMetrics(fr *Falco_Response) error {
+	// Increment counter of falco events
+	// Is there any benefit to add event to histogram?
+	return nil
+}
+
+func processDeletePodEventMetrics(podname string) error {
+	// Increment counter of delete pod events
+	// Increment counter for delete of this podname
+	// Increment counter for delete in this namespace
+	return nil
 }
 
 func main() {
