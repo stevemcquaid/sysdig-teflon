@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"math/big"
 	"net/http"
+	"strings"
 )
 
 type Falco_Output_Fields struct {
@@ -27,36 +28,41 @@ type Falco_Response struct {
 	Fields   Falco_Output_Fields `json:"output_fields"`
 }
 
-func marshalFalco(falcoJson []byte) {
+func createFalco(b []byte) (*Falco_Response, error) {
 	//falcoJson := `{"output":"18:37:22.181204909: Notice A shell was spawned in a container with an attached terminal (user=root k8s.pod=falco-6htpw container=5dea0c14015a shell=bash parent=<NA> cmdline=bash  terminal=34818)","priority":"Notice","rule":"Terminal shell in container","time":"2018-03-28T18:37:22.181204909Z", "output_fields": {"container.id":"5dea0c14015a","evt.time":1522262242181204909,"k8s.pod.name":"falco-6htpw","proc.cmdline":"bash ","proc.name":"bash","proc.pname":null,"proc.tty":34818,"user_name":"root"}}`
-	var fr Falco_Response
-	json.Unmarshal(falcoJson, &fr)
-	fmt.Println(fr)
-}
-
-func handleFalco(w http.ResponseWriter, r *http.Request) {
-	// Read body of request
-	b, err := ioutil.ReadAll(r.Body)
-	if err != nil {
-		fmt.Printf("Error reading body: %v", err)
-		http.Error(w, "can't read body", http.StatusBadRequest)
-		return
-	}
 
 	// Print raw byte array of request
 	//fmt.Println(string(b))
 
 	// Unmarshal into expected falco struct
 	var fr Falco_Response
-	err = json.Unmarshal(b, &fr)
+	err := json.Unmarshal(b, &fr)
+	if err != nil {
+		return nil, err
+	}
+
+	return &fr, nil
+	// Alternate Unmarshal Method
+	//decoder := json.NewDecoder(req.Body)
+	//err := decoder.Decode(&fr)
+}
+
+func handleFalcoHTTP(w http.ResponseWriter, r *http.Request) {
+	// Read body of request
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		fmt.Printf("Error reading body: %v", err)
+		http.Error(w, "can't read body", http.StatusBadRequest)
+		return
+	}
+
+	// Create falco struct
+	//fr = *Falco_Response
+	fr, err := createFalco(body)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
 	}
-
-	// Alternate Unmarshal Method
-	//decoder := json.NewDecoder(req.Body)
-	//err := decoder.Decode(&fr)
 
 	// Respond to request with Success
 	s := "Success! "
@@ -69,8 +75,13 @@ func handleFalco(w http.ResponseWriter, r *http.Request) {
 	w.Write(output)
 
 	// Process metrics for this event
-	processFalcoEventMetrics(&fr)
+	defer handleFalcoEventMetrics(fr)
 
+	// Do business logic
+	defer handleFalcoEvent(fr)
+}
+
+func handleFalcoEvent(fr *Falco_Response) {
 	// Now determine if we should delete the pod
 	filter := getFilter()
 	namespace := getNamespace()
@@ -90,19 +101,15 @@ func getNamespace() string {
 }
 
 func shouldDeletePod(podname string, filter string) bool {
-	if contains(podname, filter) {
+	if strings.Contains(podname, filter) {
 		return true
 	}
 
-	if contains(podname, "delete") {
+	if strings.Contains(podname, "delete") {
 		return true
 	}
 
 	return false
-}
-
-func contains(superStr string, subStr string) bool {
-	return true
 }
 
 func deletePod(podname string, namespace string) {
@@ -110,13 +117,13 @@ func deletePod(podname string, namespace string) {
 	// Do k8s things here
 }
 
-func processFalcoEventMetrics(fr *Falco_Response) error {
+func handleFalcoEventMetrics(fr *Falco_Response) error {
 	// Increment counter of falco events
 	// Is there any benefit to add event to histogram?
 	return nil
 }
 
-func processDeletePodEventMetrics(podname string) error {
+func handleDeletePodEventMetrics(podname string) error {
 	// Increment counter of delete pod events
 	// Increment counter for delete of this podname
 	// Increment counter for delete in this namespace
@@ -124,10 +131,8 @@ func processDeletePodEventMetrics(podname string) error {
 }
 
 func main() {
-	http.HandleFunc("/", handleFalco)
+	http.HandleFunc("/", handleFalcoHTTP)
 	http.ListenAndServe(":80", nil)
-	//falcoJson := `{"output":"18:37:22.181204909: Notice A shell was spawned in a container with an attached terminal (user=root k8s.pod=falco-6htpw container=5dea0c14015a shell=bash parent=<NA> cmdline=bash  terminal=34818)","priority":"Notice","rule":"Terminal shell in container","time":"2018-03-28T18:37:22.181204909Z", "output_fields": {"container.id":"5dea0c14015a","evt.time":1522262242181204909,"k8s.pod.name":"falco-6htpw","proc.cmdline":"bash ","proc.name":"bash","proc.pname":null,"proc.tty":34818,"user_name":"root"}}`
-	//marshalFalco([]byte(falcoJson))
 }
 
 //func parseGhPost(rw http.ResponseWriter, request *http.Request) {
