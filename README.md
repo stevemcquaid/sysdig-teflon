@@ -108,3 +108,4 @@ Hint: https://sysdig.com/blog/kubernetes-scaler/
 # Idea
   - Kubernetes HPA using a custom-defined metric coming from sysdig monitor. Implement a custom metrics server and configurable autoscaler.
   - The Custom-defined metric is a function of falco event alerts, ingested via a custom falco.yaml program_output sending to a custom service to parse and expose as a prometheus endpoint
+  - Use autosploit to give live demo about hacking rate as function of system load
