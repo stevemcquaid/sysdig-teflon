@@ -11,6 +11,11 @@ run:
 	@bash -x scripts/build.sh
 	@bash -x scripts/run.sh
 
+## Build & Test
+test:
+	@bash -x scripts/build.sh
+	@bash -x scripts/test.sh
+
 ## Run a shell in container locally for debugging
 shell:
 	@bash -x scripts/shell.sh

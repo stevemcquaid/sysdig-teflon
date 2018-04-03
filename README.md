@@ -21,30 +21,15 @@
     - Consumed by HPA to determine whether or not to scale
 
 # TODO
-  - [X] Research Sysdig
-  - [X] Research Falco
-  - [X] Read blog posts
-    - [X] Istio stuff
-    - [X] Prometheus
-    - [X] Falco + K8S
-    - [X] Custom prometheus monitor annotations/definitions
-  - [X] Figure out how to reload falco or have falco sigup/load new rulesets
-  - [ ] Get falco helm chart into kubernetes charts repo
   - [X] Figure out how to expose Falco Alerts to an API - "TEFLON Project"
-    - [X] https://github.com/draios/falco/wiki/Falco-Alerts
-    - [X] Methods
-      - [ ] Standard Output
-      - [ ] File
-      - [ ] Syslog
-      - [X] Spawned program
-        - Most reliable, easy to use, and scalable
     - [X] How to parse Falco json in golang
   - [X] Figure out how to expose metrics of these Falco alerts
     - Prometheus Metrics Endpoint - https://blog.alexellis.io/prometheus-monitoring/
     - Sysdig Monitor Ingestion
   - [X] Figure out how to create HPA to scale if under attack
     - https://sysdig.com/blog/kubernetes-scaler/
-  - [X] Start building the different parts of the system
+  - [ ] Create test for falcojson in http request
+  - [ ] Setup code coverage
 
 # Tasks to create HPA
   - [ ] Ensure Cluster Compatibility
@@ -97,12 +82,11 @@
 
 # Option A
 You should implement a Kubernetes HPA using metrics coming from Sysdig Monitor. Use Sysdig API to get this metrics and implement a custom metrics server and a configurable autoscaler. Try to bring this as far as your time allows:
-
-Golang implementation
-Defensive code
-Kubernetes friendly configuration
-Dockerize it and document how to deploy/use with Kubernetes
-Upload to GitHub and make it contribution friendly (README.md, PRs policy, etc)
+  - Golang implementation
+  - Defensive code
+  - Kubernetes friendly configuration
+  - Dockerize it and document how to deploy/use with Kubernetes
+  - Upload to GitHub and make it contribution friendly (README.md, PRs policy, etc)
 
 Hint: https://sysdig.com/blog/kubernetes-scaler/
 # Idea

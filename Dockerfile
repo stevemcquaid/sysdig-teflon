@@ -1,4 +1,4 @@
-FROM golang:1.8.5-alpine3.6
+FROM golang:1.10.1-alpine3.7
 
 MAINTAINER Steve McQuaid <steve@stevemcquaid.com>
 
@@ -10,11 +10,12 @@ RUN apk update && apk upgrade && \
 WORKDIR /go/src/teflon
 
 # Caching large packages to speed up build
-RUN go-wrapper download -u github.com/golang/glog
+#RUN go-wrapper download -u github.com/golang/glog
 
 COPY src/ .
 
-RUN go-wrapper download   # "go get -d -v ./..."
-RUN go-wrapper install    # "go install -v ./..."
+RUN go get -d -v ./...
 
-CMD ["go-wrapper", "run"] # ["app"]
+RUN go install -v ./...
+
+CMD ["teflon"]
