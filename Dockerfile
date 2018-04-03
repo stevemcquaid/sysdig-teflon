@@ -12,6 +12,11 @@ WORKDIR /go/src/teflon
 # Caching large packages to speed up build
 #RUN go-wrapper download -u github.com/golang/glog
 
+RUN go get -d -v "k8s.io/apimachinery/pkg/api/errors"
+RUN go get -d -v "k8s.io/apimachinery/pkg/apis/meta/v1"
+RUN go get -d -v "k8s.io/client-go/kubernetes"
+RUN go get -d -v "k8s.io/client-go/tools/clientcmd"
+
 COPY src/ .
 
 RUN go get -d -v ./...
