@@ -130,13 +130,6 @@ func handleDeletePodEventMetrics(podname string) error {
 	return nil
 }
 
-func main() {
-	http.HandleFunc("/", handleFalcoHTTP)
-	//http.HandleFunc("/metrics", handleMetrics)
-	//http.HandleFunc("/custom-metrics-api", handleCustomMetricsAPI)
-	http.ListenAndServe(":80", nil)
-}
-
 //func parseGhPost(rw http.ResponseWriter, request *http.Request) {
 //	//decoder := json.NewDecoder(request.Body)
 //

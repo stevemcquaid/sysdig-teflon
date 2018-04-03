@@ -4,13 +4,16 @@
   - Scale services that are under attack
 
 ## TODO
+  - [ ] Separate server from api
   - [ ] Implement dummy endpoint for "Kubernetes custom metric apiserver spec"
+  - [ ] Build custom metric apiserver to pull from sysdig
   - [ ] Test http request body falcojson parsing
-  - [ ] Test k8s delete pod
-  - [ ] Setup code coverage
+  - [X] Test k8s delete pod
+  - [ ] Create test for k8s-client.go
+  - [ ] Register the api - https://github.com/DirectXMan12/k8s-prometheus-adapter/blob/master/docs/walkthrough.md
   - [ ] Setup HPA resource (test metic apiserver spec)
-  - [ ] Separate custom metric apiserver to pull from sysdig
   - [ ] E2E automation?
+  
 
 ### Components Required
   - [ ] TEFLON
