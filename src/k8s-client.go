@@ -56,6 +56,5 @@ func deleteK8SPod(kubeconfig *string, podname string, namespace string) {
 	//fmt.Printf("Found pod %s in namespace %s\n", podname, namespace)
 	//}
 
-	//time.Sleep(10 * time.Second)
 	//}
 }

@@ -117,7 +117,6 @@ func shouldDeletePod(podname string, filter string) bool {
 	return false
 }
 
-
 func handleFalcoEventMetrics(fr *Falco_Response) error {
 	// Increment counter of falco events
 	// Is there any benefit to add event to histogram?
@@ -133,6 +132,8 @@ func handleDeletePodEventMetrics(podname string) error {
 
 func main() {
 	http.HandleFunc("/", handleFalcoHTTP)
+	//http.HandleFunc("/metrics", handleMetrics)
+	//http.HandleFunc("/custom-metrics-api", handleCustomMetricsAPI)
 	http.ListenAndServe(":80", nil)
 }
 

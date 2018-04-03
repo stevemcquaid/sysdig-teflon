@@ -3,10 +3,19 @@
   - Instrument rate of reaping
   - Scale services that are under attack
 
+## TODO
+  - [ ] Implement dummy endpoint for "Kubernetes custom metric apiserver spec"
+  - [ ] Test http request body falcojson parsing
+  - [ ] Test k8s delete pod
+  - [ ] Setup code coverage
+  - [ ] Setup HPA resource (test metic apiserver spec)
+  - [ ] Separate custom metric apiserver to pull from sysdig
+  - [ ] E2E automation?
+
 ### Components Required
   - [ ] TEFLON
     - [X] API to receive, parse, process falco alerts
-    - [ ] Delete infected pods
+    - [X] Delete infected pods
       - [ ] Check for available available replicas avoid downtime
     - [ ] Metrics endpoint to monitor rate of infection/reaping
   - [ ] HPA to scale if under active attack
@@ -28,8 +37,6 @@
     - Sysdig Monitor Ingestion
   - [X] Figure out how to create HPA to scale if under attack
     - https://sysdig.com/blog/kubernetes-scaler/
-  - [ ] Create test for falcojson in http request
-  - [ ] Setup code coverage
 
 # Tasks to create HPA
   - [ ] Ensure Cluster Compatibility
