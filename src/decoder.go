@@ -86,8 +86,13 @@ func handleFalcoEvent(fr *Falco_Response) {
 	filter := getFilter()
 	namespace := getNamespace()
 	if shouldDeletePod(fr.Fields.K8s_pod_name, filter) {
-		deletePod(fr.Fields.K8s_pod_name, namespace)
+		deleteK8SPod(getKubeConfig(), fr.Fields.K8s_pod_name, namespace)
 	}
+}
+
+func getKubeConfig() *string {
+	kc := "/src/kube.config"
+	return &kc
 }
 
 func getFilter() string {
@@ -112,10 +117,6 @@ func shouldDeletePod(podname string, filter string) bool {
 	return false
 }
 
-func deletePod(podname string, namespace string) {
-	fmt.Println("Deleting podname: ", podname, "namespace: ", namespace, "...")
-	// Do k8s things here
-}
 
 func handleFalcoEventMetrics(fr *Falco_Response) error {
 	// Increment counter of falco events
