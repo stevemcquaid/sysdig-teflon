@@ -3,17 +3,29 @@
   - Instrument rate of reaping
   - Scale services that are under attack
 
-## TODO
-  - [ ] Separate server from api
-  - [ ] Implement dummy endpoint for "Kubernetes custom metric apiserver spec"
-  - [ ] Build custom metric apiserver to pull from sysdig
-  - [ ] Test http request body falcojson parsing
-  - [X] Test k8s delete pod
-  - [ ] Create test for k8s-client.go
-  - [ ] Register the api - https://github.com/DirectXMan12/k8s-prometheus-adapter/blob/master/docs/walkthrough.md
-  - [ ] Setup HPA resource (test metic apiserver spec)
+## TODO - Dev
+  - [ ] Clean server from api
+  - [ ] /apis/custom.metrics.k8s.io/v1beta1 - Implement dummy endpoint for hpa- https://github.com/directxman12/k8s-prometheus-adapter
+  - [ ] Setup HPA resource to hit dummy custom.metric
+    - [ ] Register the api - https://github.com/DirectXMan12/k8s-prometheus-adapter/blob/master/docs/walkthrough.md
+  - [ ] /metrics - Create dummy metrics endpoint
+  - [ ] /metrics - Use real data for endpoint
+  - [ ] /metrics - Sysdig should injest endpoint
+  - [ ] /apis/custom.metrics.k8s.io/v1beta1 - Pull real data from sysdig
   - [ ] E2E automation?
-  
+
+## TODO - Testing
+  - [X] Test k8s delete pod
+  - [ ] Test http request body falcojson parsing
+  - [ ] Create test for k8s-client.go
+  - [ ] Test /apis/custom.metrics.k8s.io/v1beta1
+    - [ ] Test /apis/custom.metrics.k8s.io/v1beta1 responses are valid
+    - [ ] Test hpa resource is valid
+    - [ ] Test real values are accurate (when pulled from external source/mocked)
+  - [ ] Test /metrics
+    - [ ] Test /metrics responses are valid
+    - [ ] Test /metrics values are accurate (might have to shim the values given to internal functions)
+  - [ ] Test HPA - scales up with new hacking load
 
 ### Components Required
   - [ ] TEFLON
