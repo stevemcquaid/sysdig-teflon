@@ -3,13 +3,13 @@ package main
 import (
 	//"flag"
 	"fmt"
-	"k8s.io/apimachinery/pkg/api/errors"
+	//"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/clientcmd"
 	//"os"
 	//"path/filepath"
-	"time"
+	//"time"
 )
 
 func deleteK8SPod(kubeconfig *string, podname string, namespace string) {
@@ -28,8 +28,8 @@ func deleteK8SPod(kubeconfig *string, podname string, namespace string) {
 	}
 
 	// Delete the pod
-	err := clientset.CoreV1().Pods(namespace).Delete(podname)
-	if err != nil {
+	err2 := clientset.CoreV1().Pods(namespace).Delete(podname, &metav1.DeleteOptions{})
+	if err2 != nil {
 		fmt.Println("")
 	}
 
