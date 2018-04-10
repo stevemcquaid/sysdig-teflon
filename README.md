@@ -3,9 +3,21 @@
   - Instrument rate of reaping
   - Scale services that are under attack
 
+
+# Considerations:
+If burnTime > spawnTime - Teflon should wait to delete
+
+
 ## TODO - Dev
+  - Follow HPA blog post exactly
+
+  - Launch Prometheus operator to get the Metrics
+  - https://github.com/mateobur/kubernetes-scaler-metrics-api/commit/1686a7ffe7614b56404be507670a3288715ee49a#diff-6d93409bda128a8d2662e119b706753bR35
+  - Checkout interface.go - might be able to get away with a small implementation
+  - [ ] Extend example dockerfile (FROM mateobur/custommetrics)
+  - [ ] Follow HPA blog post exactly, get metrics into sysdig, use standard dockerfile to extend/get them out
   - [ ] Clean server from api
-  - [ ] /apis/custom.metrics.k8s.io/v1beta1 - Implement dummy endpoint for hpa- https://github.com/directxman12/k8s-prometheus-adapter
+  - [  ] /apis/custom.metrics.k8s.io/v1beta1 - Implement dummy endpoint for hpa- https://github.com/directxman12/k8s-prometheus-adapter
   - [ ] Setup HPA resource to hit dummy custom.metric
     - [ ] Register the api - https://github.com/DirectXMan12/k8s-prometheus-adapter/blob/master/docs/walkthrough.md
   - [ ] /metrics - Create dummy metrics endpoint

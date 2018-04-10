@@ -82,6 +82,9 @@ func handleFalcoHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleFalcoEvent(fr *Falco_Response) {
+	// Metrics - Increment # detected infections
+	infections.Inc()
+
 	// Now determine if we should delete the pod
 	filter := getFilter()
 	namespace := getNamespace()

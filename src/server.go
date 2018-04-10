@@ -7,8 +7,13 @@ import (
 
 func main() {
 	http.HandleFunc("/", handleFalcoHTTP)
-	//http.HandleFunc("/metrics", handleMetrics)
+
+	// Setup prometheus
+	registerPrometheus()
+
 	//http.HandleFunc("/custom-metrics-api", handleCustomMetricsAPI)
+
 	http.HandleFunc("/deleteK8SPod", handleDeleteK8SPod)
+	http.HandleFunc("/count", count)
 	http.ListenAndServe(":80", nil)
 }

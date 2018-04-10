@@ -1,11 +1,12 @@
-kind: Service
 apiVersion: v1
+kind: Service
 metadata:
   name: teflon
 spec:
   selector:
     app: teflon
   ports:
-  - protocol: TCP
+  - protocol: "TCP"
     port: 80
     targetPort: 80
+  type: LoadBalancer

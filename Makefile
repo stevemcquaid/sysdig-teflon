@@ -25,6 +25,14 @@ kube:
 	@bash -x scripts/k8s-delete.sh
 	@bash -x scripts/k8s-create.sh
 
+## Deploy k8s
+kubeD:
+	@bash -x scripts/k8s-delete.sh
+
+## Deploy k8s
+kubeC:
+	@bash -x scripts/k8s-create.sh
+
 help:
 	@printf "Available make targets:\n\n"
 	@awk '/^[a-zA-Z\-\_0-9%:\\]+:/ { \
