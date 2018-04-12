@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/prometheus/client_golang/prometheus"
 	"net/http"
 )
@@ -50,7 +51,7 @@ func registerPrometheus() {
 
 func count(w http.ResponseWriter, r *http.Request) {
 	stupidCount.Inc()
-	msg := fmt.Println("Incremented count")
+	msg := fmt.Sprintf("Incremented count")
 	w.Header().Set("content-type", "text/plain")
 	w.Write([]byte(msg))
 }

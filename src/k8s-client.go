@@ -22,6 +22,9 @@ func handleDeleteK8SPod(w http.ResponseWriter, r *http.Request) {
 
 	//fmt.Printf("podname: %v, namespace: %v", podname, namespace)
 
+	// Add metrics handler here to provide scoped metrics with pod, namespace, etc.
+	infections.Inc()
+
 	msg, err := deleteK8SPod(&kubeconfig, podname, namespace)
 	if err != nil {
 		log.Println(err.Error())
