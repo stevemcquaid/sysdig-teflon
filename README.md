@@ -14,19 +14,18 @@ Teflon Goals:
   - Utilize autosploit to simulate a real-world attack on a vulnerable docker image to show live demo about hacking rate as function of system load. Scale out the number of autosploit containers to simulate multiple attackers.
 
 ### Components Required
-  -  TEFLON
+  - TEFLON
     - API to receive, parse, process falco alerts
     - Delete infected pods
       - Check for available available replicas to avoid downtime
-    -  Metrics endpoint to monitor rate of infection/reaping
-  -  HPA to scale if under active attack
+    - Metrics endpoint to monitor rate of infection/reaping
+  - HPA to scale if under active attack
     - Possible Trigger Metrics (Goal = Have more pod replicas than hackers can infect)
-      -  Number of infections
-      -  Number of reapings
-      -  % available endpoints vs reaped ones
-      -  Time to new infection
-      -  Time to recreation
-  -  Custom-metrics-apiserver
+      - Number of infections
+      - Number of reapings
+      - % available endpoints vs reaped ones
+      - Time to new infection
+      - Time to recreation
+  - Custom-metrics-apiserver
     - Consumed by HPA to determine whether or not to scale
-    - 
 
