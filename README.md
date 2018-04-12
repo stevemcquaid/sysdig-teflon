@@ -3,7 +3,7 @@ Teflon is a kubernetes module which integrates with Sysdig-Falco to take program
 
 By using this approach we are actually able to treat malicious exploitation as a very specific type of load on the system. I believe this is compelling because it allows cluster administrators to focus less on the one-off application vulnerability and instead focus on the bigger picture of improving response times and the triage/mitigation process as a whole. As long as new code is being written, software vulnerabilities will continue to be created. So by treating the problem as load on a system, attention can be paid to the level of active threats on the system and engineering resources can be better appropriated.  
 
-Teflon Goals:
+## Teflon Goals:
   1) Smoothly integrate with Sysdig Falco
   2) Expose metrics so that malicious exploitation can be treated as a function of load
   3) Destroy & recreate infected pods while maintaining service uptime
