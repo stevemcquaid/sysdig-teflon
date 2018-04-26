@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	http.HandleFunc("/", handleFalcoHTTP)
+	http.HandleFunc("/falco", handleFalcoHTTP)
 
 	// Setup prometheus
 	registerPrometheus()
